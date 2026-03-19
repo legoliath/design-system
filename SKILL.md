@@ -8,7 +8,8 @@ description: >
   page PDF via Typst — rapports, factures, documents pro, (4) mise en page GitHub Markdown — README,
   docs, alerts, Mermaid, badges. Triggers: mise en page, layout, formatage, formater une page,
   structurer une page, rendre beau, design de page, page Notion, dashboard, présentation visuelle,
-  structure de document, template de page, améliorer le look, page de projet. Ce skill fournit des
+  structure de document, template de page, améliorer le look, page de projet, outils de design,
+  design tools, meilleur mise en page, belle page, projet Notion, utiliser le design-system. Ce skill fournit des
   RÈGLES et RECETTES de design, PAS de la génération d'images. NOT for: génération d'images (utiliser
   nano-banana-pro ou wan), contenu texte sans souci visuel, backend code.
 ---
