@@ -1,14 +1,16 @@
 ---
 name: design-system
 description: >
-  Modular design system that gives AI agents visual design taste for creating beautiful documents,
-  pages, and layouts across multiple platforms. Use when: (1) creating or formatting Notion pages
-  with visual impact (covers, icons, callouts, columns, colors), (2) building HTML dashboards or
-  web pages with modern CSS, (3) generating professional PDFs with Typst, (4) writing visually
-  rich GitHub Markdown (alerts, Mermaid diagrams, badges). Triggers on requests involving layout,
-  formatting, visual design, making things "look good", page aesthetics, document styling,
-  dashboards, or any mention of visual presentation quality. NOT for: pure content writing
-  without visual concerns, data processing, or backend code.
+  Mise en page et design de documents, pages, et projets. Contient les règles de design (typographie,
+  couleurs, hiérarchie visuelle, layout patterns) et des recettes concrètes par plateforme.
+  Use when: (1) mise en page Notion — covers, icons, callouts colorés, columns, dividers, toggle
+  sections, synced blocks, (2) mise en page HTML — dashboards, pages web, CSS moderne, (3) mise en
+  page PDF via Typst — rapports, factures, documents pro, (4) mise en page GitHub Markdown — README,
+  docs, alerts, Mermaid, badges. Triggers: mise en page, layout, formatage, formater une page,
+  structurer une page, rendre beau, design de page, page Notion, dashboard, présentation visuelle,
+  structure de document, template de page, améliorer le look, page de projet. Ce skill fournit des
+  RÈGLES et RECETTES de design, PAS de la génération d'images. NOT for: génération d'images (utiliser
+  nano-banana-pro ou wan), contenu texte sans souci visuel, backend code.
 ---
 
 # Design System
