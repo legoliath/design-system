@@ -1,50 +1,45 @@
 ---
 name: design-system
-description: "Mise en page et design de documents, pages, et projets. Règles de design (typographie, couleurs, hiérarchie visuelle, layout patterns) et recettes concrètes par plateforme. Use when: (1) mise en page Notion — covers, icons, callouts colorés, columns, dividers, toggle sections, synced blocks, (2) mise en page HTML — dashboards, pages web, CSS moderne, (3) mise en page PDF via Typst — rapports, factures, documents pro, (4) mise en page GitHub Markdown — README, docs, alerts, Mermaid, badges. Triggers: mise en page, layout, formatage, formater une page, structurer une page, rendre beau, design de page, page Notion, dashboard, présentation visuelle, template de page, améliorer le look, page de projet, outils de design, design tools, belle page, projet Notion. Ce skill fournit des RÈGLES et RECETTES de design, PAS de la génération d'images. NOT for: génération d'images (utiliser nano-banana-pro ou wan), contenu texte sans souci visuel, backend code."
+description: Mise en page et design de documents, pages et projets. Regles de design (typographie, couleurs, hierarchie visuelle, layout patterns) et recettes concretes par plateforme. Use when creating or formatting Notion pages (covers, icons, callouts, columns, dividers, toggle sections, synced blocks), building HTML dashboards or web pages, generating PDFs with Typst, writing GitHub Markdown (alerts, Mermaid, badges). Triggers on mise en page, layout, formatage, rendre beau, design de page, page Notion, dashboard, outils de design, belle page, projet Notion, template de page. Provides design RULES and RECIPES, NOT image generation.
+metadata: {"openclaw":{"emoji":"🎨"}}
 ---
 
-# Design System
+# Design System v2
 
-Modular skill: **core** (design taste) + **adapters** (platform execution).
+Opinionated design system that produces **stunning** output. Not design theory — concrete, copy-paste recipes.
 
 ## Architecture
 
 ```
-core/          → Universal design rules (always load relevant files)
-adapters/      → Platform-specific execution (load ONE per task)
-tokens/        → Semantic design tokens (load when building from scratch)
+core/          → Design taste + modern techniques (load relevant files)
+adapters/      → Platform execution with full templates (load ONE)
 ```
-
-## Routing
-
-Detect the target platform, then load:
-
-1. **Always**: relevant `core/` files for the task
-2. **One adapter**: based on output target
-
-| Target | Adapter | Core files to load |
-|--------|---------|-------------------|
-| Notion page/database | `adapters/NOTION.md` | DESIGN-PRINCIPLES + COLOR + LAYOUT-PATTERNS |
-| HTML dashboard/page | `adapters/HTML.md` | All core files |
-| PDF report/document | `adapters/TYPST.md` | DESIGN-PRINCIPLES + TYPOGRAPHY + LAYOUT-PATTERNS |
-| GitHub README/docs | `adapters/GITHUB-MARKDOWN.md` | DESIGN-PRINCIPLES + TYPOGRAPHY |
 
 ## Core Files
 
-| File | Load when |
-|------|-----------|
-| `core/DESIGN-PRINCIPLES.md` | Every visual task |
-| `core/TYPOGRAPHY.md` | Text-heavy output, PDFs, web pages |
-| `core/COLOR.md` | Choosing colors, palettes, theming |
-| `core/LAYOUT-PATTERNS.md` | Page structure, dashboards, multi-section layouts |
+| File | Purpose | Load when |
+|------|---------|-----------|
+| `core/READABILITY.md` | Information architecture for humans — scanning, hierarchy, structure | **Every task** (this is the foundation) |
+| `core/TASTE.md` | Visual design tactics — the "why it looks good" rules | Every visual task |
+| `core/MODERN-CSS.md` | Modern CSS features (clamp, :has, container queries, nesting) | Any HTML/CSS output |
+| `core/POLISH.md` | Micro-interactions, shadows, transitions, glassmorphism | Making things look polished |
+| `core/TOKENS.md` | Colors, fonts, spacing, shadows — complete token system | Building from scratch |
+| `core/LAYOUT.md` | Composable layout primitives (Stack, Cluster, Grid, Sidebar) | Page structure decisions |
+| `core/AUTO-CONTEXT.md` | Auto-enrich empty headings with web-searched context | Skeleton docs with headings but no body text |
 
-## Design Tokens
+## Adapters
 
-Load `tokens/tokens.json` when building from scratch and needing consistent values (colors, spacing, sizing). Tokens use semantic names with descriptions — use the description to pick the right token.
+| Target | Adapter | Core files to load |
+|--------|---------|-------------------|
+| HTML dashboard/page | `adapters/HTML.md` | All core files |
+| Notion page/database | `adapters/NOTION.md` | TASTE + TOKENS + LAYOUT |
+| PDF report/document | `adapters/TYPST.md` | TASTE + TOKENS |
+| GitHub README/docs | `adapters/GITHUB-MARKDOWN.md` | TASTE only |
 
 ## Principles
 
-- **Beauty serves clarity.** Decoration without purpose is noise.
-- **Maximize platform potential.** Use every feature available, not just the basics.
-- **Consistency > novelty.** Reuse patterns, colors, spacing across a project.
-- **The squint test.** If you blur the page, structure should still be visible.
+1. **Every CSS value must be intentional.** No arbitrary numbers.
+2. **Copy-paste ready.** No `/* add styles here */` placeholders.
+3. **Opinionated defaults.** Don't ask — pick the better option.
+4. **Polish is not optional.** Transitions, shadows, hover states are baseline.
+5. **System fonts first.** Zero layout shift, instant render.

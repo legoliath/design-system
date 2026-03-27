@@ -1,228 +1,315 @@
 # Notion Adapter
 
-Maximize Notion's visual potential via the API. Notion is more powerful than most people realize.
+Notion pages optimized for **human readability**, not visual decoration.
 
-## Page-Level Features
+## Page Structure — The Golden Template
 
-### Cover Images
-Set the mood. Every important page should have a cover.
-```json
-{ "cover": { "type": "external", "external": { "url": "https://images.unsplash.com/photo-..." } } }
+Every Notion project page should follow this skeleton:
+
 ```
-- Use Unsplash for free, high-quality covers
-- Match the cover to the page theme (code = dark/abstract, project = team/workspace)
-- Aspect: renders ~300px tall, use landscape images
+📌 Cover image (optional, relevant to topic)
+🎯 Icon (emoji that represents the project)
 
-### Icons
-Identity at a glance. Two options:
-```json
-{ "icon": { "type": "emoji", "emoji": "🎯" } }
-{ "icon": { "type": "external", "external": { "url": "https://..." } } }
+# Page Title — Include the Key Point
+
+💡 TL;DR callout (blue_background)
+   → 2-3 sentences. The whole page in a nutshell.
+   → A reader who stops here gets 80% of the value.
+
+---
+
+🟢 Status callout (green/yellow/red_background)
+   → Current status + what's happening now + next deadline
+
+## Key Decisions (or Key Findings)
+   1. Decision one — **bold the answer**, then explain why
+   2. Decision two — same pattern
+   3. Decision three
+
+---
+
+## [Descriptive Section Title, Not "Details"]
+   Content organized for scanning.
+   Short paragraphs. Bold key terms.
+
+▶ Toggle: Technical Details / Background / History
+   Hidden by default. Open on demand.
+
+▶ Toggle: Reference Links / Data
+   Hidden by default.
 ```
-- **Emoji**: quick, universal, colorful
-- **Custom URL**: consistent icon sets (Notion native icons, Iconic, Phosphor)
-- Pick ONE icon style per workspace for coherence
 
-### Page Settings
-- **Font style**: Default (sans), Serif (editorial), Mono (technical)
-- **Full width**: ON for dashboards, OFF for long-form reading
-- **Small text**: ON for dense data pages, OFF for readability
+## Callout Rules — Less Is More
 
-## Block Types — Full Arsenal
+Callouts are powerful BECAUSE they stand out. If everything is a callout, nothing stands out.
 
-### Text & Structure
-| Block | Design use | API type |
-|-------|-----------|----------|
-| Paragraph | Body text, descriptions | `paragraph` |
-| Heading 1 | Page sections (max 2-3 per page) | `heading_1` |
-| Heading 2 | Subsections | `heading_2` |
-| Heading 3 | Groups within subsections | `heading_3` |
-| Toggle heading | **Expandable sections** — hide detail, show on demand | `heading_1/2/3` + `is_toggleable: true` |
-| Bulleted list | Unordered items | `bulleted_list_item` |
-| Numbered list | Sequential steps | `numbered_list_item` |
-| To-do | Actionable tasks | `to_do` |
-| Quote | Standout text, testimonials | `quote` |
-| Divider | **Visual breath** between sections | `divider` |
-| Table of contents | Auto-nav for long pages | `table_of_contents` |
+**Max 2-3 callouts per page.** Use them for:
 
-### 🌟 Callouts — The Most Powerful Visual Block
+| Purpose | Icon | Color | When |
+|---------|------|-------|------|
+| TL;DR / Summary | 💡 | `blue_background` | Every page, at the top |
+| Status | 🟢/🟡/🔴 | matching bg | Project/task pages |
+| Warning / Blocker | ⚠️ | `red_background` | Only when something is actually wrong |
 
-Callouts are Notion's secret weapon. They combine **icon + colored background + rich content**.
+**DON'T use callouts for:**
+- Regular content → use paragraphs
+- Lists of items → use bullet lists
+- Every tip or note → use bold text inline
+- Decoration → never
 
+**Callout API:**
 ```json
 {
   "type": "callout",
   "callout": {
     "icon": { "type": "emoji", "emoji": "💡" },
-    "color": "yellow_background",
-    "rich_text": [{ "type": "text", "text": { "content": "Pro tip: ..." } }],
-    "children": []
+    "color": "blue_background",
+    "rich_text": [{ "type": "text", "text": { "content": "TL;DR: The project is on track. Budget approved at $12K. Launch date: April 15." } }]
   }
 }
 ```
 
-**Callouts support nested children!** Put lists, headings, even other callouts inside.
+## Headings — Descriptive, Not Decorative
 
-#### Callout Recipes
-| Purpose | Icon | Color | Example |
-|---------|------|-------|---------|
-| Info/tip | 💡 | `blue_background` | Feature explanation |
-| Success/done | ✅ | `green_background` | Completion status |
-| Warning | ⚠️ | `orange_background` | Caveats, gotchas |
-| Error/blocked | 🚨 | `red_background` | Blockers, failures |
-| Idea/note | 📝 | `purple_background` | Brainstorm, thoughts |
-| KPI/metric | 📊 | `gray_background` | Number + label |
-| Quote/highlight | 💬 | `yellow_background` | Key takeaways |
-| Status badge | 🟢/🟡/🔴 | matching bg | Current phase |
+Headings are the #1 navigation tool. Users scan them to find what they need.
 
-### Columns — Multi-Column Layouts
+```
+❌ "Overview"           → ✅ "Budget: $12,400 approved for Q2"
+❌ "Details"            → ✅ "Timeline: 6 weeks, launch April 15"
+❌ "Technical"          → ✅ "Architecture: REST API + PostgreSQL"
+❌ "Notes"              → ✅ "Open Questions (3 remaining)"
+❌ "Section 3"          → ✅ "Risk: Vendor delivery may slip 2 weeks"
+```
 
-Create side-by-side content with `column_list` + `column` blocks.
+**Hierarchy:**
+- **H1**: Page title only (one per page)
+- **H2**: Major sections (3-6 per page max)
+- **H3**: Subsections within H2 (use sparingly)
 
+**Toggle headings** for content that most readers can skip:
+```json
+{
+  "type": "heading_2",
+  "heading_2": {
+    "is_toggleable": true,
+    "rich_text": [{ "type": "text", "text": { "content": "▶ Technical Architecture Details" } }]
+  }
+}
+```
+
+## Columns — Use Sparingly
+
+Notion columns break reading flow, especially on mobile (they stack vertically = confusing order).
+
+**When to use columns (max 2-3):**
+- KPI metrics side by side (callout in each column)
+- Short metadata pairs (left: info, right: info)
+- Comparison of 2-3 options
+
+**When NOT to use columns:**
+- Body text (kills reading flow)
+- More than 3 columns (unreadable on mobile)
+- Nested columns (nightmare)
+
+**KPI column recipe:**
 ```json
 {
   "type": "column_list",
   "column_list": { "children": [
-    { "type": "column", "column": { "children": [/* blocks */] } },
-    { "type": "column", "column": { "children": [/* blocks */] } },
-    { "type": "column", "column": { "children": [/* blocks */] } }
+    { "type": "column", "column": { "children": [
+      { "type": "callout", "callout": {
+        "icon": { "type": "emoji", "emoji": "📊" },
+        "color": "gray_background",
+        "rich_text": [
+          { "type": "text", "text": { "content": "Budget\n" }, "annotations": { "bold": false, "color": "gray" } },
+          { "type": "text", "text": { "content": "$12,400" }, "annotations": { "bold": true } }
+        ]
+      }}
+    ]}},
+    { "type": "column", "column": { "children": [
+      { "type": "callout", "callout": {
+        "icon": { "type": "emoji", "emoji": "⏱" },
+        "color": "gray_background",
+        "rich_text": [
+          { "type": "text", "text": { "content": "Timeline\n" }, "annotations": { "bold": false, "color": "gray" } },
+          { "type": "text", "text": { "content": "6 weeks" }, "annotations": { "bold": true } }
+        ]
+      }}
+    ]}}
   ]}
 }
 ```
 
-- **2 columns**: sidebar + content, comparison
-- **3 columns**: KPI cards, feature highlights
-- **4+ columns**: use sparingly, gets cramped on mobile
-- Columns can contain ANY block type (callouts, images, lists, toggles)
+## Tables — For Structured Data Only
 
-### Media & Embeds
-| Block | Use for | API type |
-|-------|---------|----------|
-| Image | Screenshots, diagrams, photos | `image` (URL or upload) |
-| Video | Tutorials, demos | `video` (YouTube, Vimeo, URL) |
-| Bookmark | **Rich link previews** with thumbnail | `bookmark` |
-| Embed | Figma, Loom, Maps, Typeform, Miro, CodePen | `embed` |
-| File | Downloadable attachments | `file` |
-| PDF | Inline PDF viewer | `pdf` |
-| Code | **Syntax-highlighted** snippets (50+ languages) | `code` |
-| Equation | Math formulas (KaTeX) | `equation` |
+Tables are for comparison and structured data, not for layout.
 
-### Synced Blocks — Reusable Components
+**Good uses:**
+- Feature comparison (options side by side)
+- Task list with assignee + status + date
+- Budget breakdown by category
+- Timeline with milestones
 
-Create once, use everywhere. Edit in one place, updates everywhere.
-
-```json
-{
-  "type": "synced_block",
-  "synced_block": {
-    "synced_from": null,
-    "children": [/* original content */]
-  }
-}
-```
-
-Reference an existing synced block:
-```json
-{
-  "type": "synced_block",
-  "synced_block": {
-    "synced_from": { "type": "block_id", "block_id": "original-block-id" }
-  }
-}
-```
-
-Use for: headers, footers, navigation bars, status legends, recurring callouts.
-
-### Tables
-
+**Table with headers:**
 ```json
 {
   "type": "table",
   "table": {
-    "table_width": 3,
+    "table_width": 4,
     "has_column_header": true,
     "has_row_header": false,
     "children": [
-      { "type": "table_row", "table_row": { "cells": [[/*rich text*/], [/*...*/], [/*...*/]] } }
+      { "type": "table_row", "table_row": { "cells": [
+        [{"type":"text","text":{"content":"Task"}}],
+        [{"type":"text","text":{"content":"Owner"}}],
+        [{"type":"text","text":{"content":"Status"}}],
+        [{"type":"text","text":{"content":"Due"}}]
+      ]}},
+      { "type": "table_row", "table_row": { "cells": [
+        [{"type":"text","text":{"content":"Finalize specs"}}],
+        [{"type":"text","text":{"content":"Alice"}}],
+        [{"type":"text","text":{"content":"✅ Done"}}],
+        [{"type":"text","text":{"content":"Mar 10"}}]
+      ]}}
     ]
   }
 }
 ```
 
-- Use `has_column_header: true` for visual distinction
-- Tables support rich text in cells (bold, color, links)
+## Rich Text Formatting — Bold the Answer
 
-## Rich Text Formatting
+**Within paragraphs:**
+- **Bold** = the key info (name, number, decision, status)
+- Regular = supporting context
+- `Code` = technical terms, file names, commands
+- *Italic* = almost never (poor readability)
+- Color text = sparingly, for status only (red = problem, green = done)
 
-Every text block supports annotations:
-```json
-{
-  "type": "text",
-  "text": { "content": "important", "link": null },
-  "annotations": {
-    "bold": true,
-    "italic": false,
-    "strikethrough": false,
-    "underline": false,
-    "code": false,
-    "color": "red"
-  }
-}
+```
+❌ "After careful consideration of all available options, we decided to go with PostgreSQL."
+✅ "Database: **PostgreSQL** — best fit for our read-heavy workload and JSON support."
 ```
 
-### Available Colors
-**Text**: `default`, `gray`, `brown`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`, `red`
-**Background**: same names + `_background` suffix
+## Dividers
 
-### Inline Elements
-- **@mentions**: link to pages or users
-- **Dates**: formatted date ranges
-- **Links**: clickable URLs
-- **Inline code**: for technical terms
-- **Equations**: inline KaTeX math
+Use dividers between major sections to create visual breathing room.
 
-## Design Recipes
+```json
+{ "type": "divider", "divider": {} }
+```
 
-### Project Dashboard
-1. Cover: relevant Unsplash image
-2. Icon: project emoji
-3. Callout (`green_background`): current status + phase
-4. Divider
-5. Column list (3 cols): KPI callouts with 📊 + bold number + gray label
-6. Divider
-7. H2: "Active Work"
-8. Linked database view (table or board)
-9. H2: "Recent Updates"
-10. Timeline using dated callouts
-11. Toggle H2: "Resources" — links, docs, references
-12. Toggle H2: "Archive"
+**When to use:**
+- Between TL;DR and main content
+- Between major H2 sections
+- Before reference/appendix section
 
-### Documentation Page
-1. Icon: 📖
-2. Table of contents block
-3. Callout (`blue_background`): page purpose / TL;DR
-4. Divider
-5. H2 sections with content
-6. Callouts for tips (💡), warnings (⚠️)
-7. Code blocks with language specified
-8. Toggle sections for detailed examples
+**When NOT to use:**
+- Between every paragraph
+- Between H3 subsections (spacing is enough)
+- More than 4-5 per page (becomes noise)
+
+## Progressive Disclosure in Notion
+
+**Toggle headings** = the primary tool:
+
+```
+## Key Decisions
+   Visible: the decisions themselves
+
+▶ Background Research (toggle H2)
+   Hidden: detailed analysis that led to decisions
+
+▶ Meeting Notes Archive (toggle H2)  
+   Hidden: historical discussion
+
+▶ Reference Links (toggle H2)
+   Hidden: source materials
+```
+
+**Rule: 60% visible, 40% in toggles.** The visible part should tell the complete story. Toggles add depth, not essential info.
+
+## Page Types — Quick Recipes
+
+### Project Page
+```
+🎯 Icon + Cover
+# Project Name — One-Line Status
+💡 TL;DR callout
+---
+[3-col KPI: Budget | Timeline | Status]
+---
+## Goals (numbered list, bold each goal)
+## Current Sprint / Active Work
+## Risks & Blockers
+▶ Architecture / Technical Details
+▶ Meeting Notes
+▶ Reference
+```
+
+### Decision Document
+```
+⚖️ Icon
+# Decision: [What We Chose]
+💡 TL;DR: We chose X because Y. Alternatives were A and B.
+---
+## Context (2-3 short paragraphs)
+## Options Considered (table: option | pros | cons | cost)
+## Decision: Option B (bold the choice, explain reasoning)
+## Next Steps (to-do blocks with @mentions)
+▶ Detailed Analysis
+```
 
 ### Meeting Notes
-1. Icon: 🤝
-2. Column list (2 cols):
-   - Left: Callout with 👥 attendees
-   - Right: Callout with 📅 date + ⏱ duration
-3. Divider
-4. H2: "Agenda" — numbered list
-5. H2: "Notes" — bulleted list
-6. H2: "Action Items" — to_do blocks with @mentions
-7. Toggle H2: "Previous Meeting" — synced block or link
+```
+📝 Icon
+# Meeting: [Topic] — [Date]
+💡 TL;DR: Main decisions + action items
+---
+[2-col: Attendees | Date + Duration]
+---
+## Decisions Made (numbered)
+## Action Items (to-do blocks: task + @owner + date)
+▶ Full Discussion Notes
+```
 
-### Weekly Report
-1. Cover: team/project themed
-2. Callout (`green_background`): 🟢 "On Track" or 🟡 "At Risk"
-3. Column list (3-4 cols): KPI callouts
-4. H2: "Highlights" — callout per highlight with ✅ icon
-5. H2: "Challenges" — callout per challenge with ⚠️ icon
-6. H2: "Next Week" — numbered list of priorities
-7. Table: detailed metrics
+### Weekly Status
+```
+📊 Icon
+# Week of [Date] — [On Track / At Risk / Blocked]
+🟢/🟡/🔴 Status callout
+---
+[3-col KPIs]
+## Highlights (bulleted, bold the achievement)
+## Blockers (bulleted, bold the problem + who owns resolution)  
+## Next Week (numbered priorities)
+▶ Detailed Metrics
+```
+
+## Database Properties — Keep Tables Readable
+
+**The #1 rule:** every property must be readable in a table cell without clicking.
+
+**Property types for table columns (scanable):**
+- `title` → 3-8 words max
+- `select` / `multi_select` → short labels with emoji prefix
+- `date` → dates are always compact
+- `number` → numbers with format (currency, %)
+- `url` → shows as link icon
+- `files` → shows as attachment icon
+- `relation` → shows linked item title
+- `checkbox` → ✅ or empty
+
+**NEVER put in a table column:**
+- `rich_text` with more than 10 words → goes in the **page body**
+- Long descriptions → page body
+- Context, notes, conclusions → page body
+- Lists of items → page body or relation
+
+**The pattern:**
+```
+TABLE CELL (visible):     "Peplink BR1 Pro 5G" | 📦 Commandé | $1,500
+PAGE BODY (on click):     Full description, alternatives evaluated, 
+                          links, technical notes, installation guide
+```
+
+**If you need a short text column** (like "Résumé" on Decisions), keep it to ONE sentence max. Write it as a headline, not a paragraph.
